@@ -3,6 +3,7 @@
 #wget -q "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/installer.sh  -O - | /bin/sh
 VERSION=1.3
 VERSIONS=1.4
+MY_URL="https://raw.githubusercontent.com/emil237/dreamsat/main"
 PLUGIN_PATH='/usr/lib/enigma2/python/Plugins/Extensions/DreamSat'
 PYTHON_VERSION=$(python -c"import platform; print(platform.python_version())")
 
@@ -30,34 +31,27 @@ if [ -d $PLUGIN_PATH ]; then
   
 fi
 
-if [ "$PYTHON_VERSION" == 3.9.9 -o "$PYTHON_VERSION" == 3.9.7 ]; then
+if [ "$PYTHON_VERSION" == 3.9.9 -o "$PYTHON_VERSION" == 3.9.7 -o "$PYTHON_VERSION" == 3.9.6 -o "$PYTHON_VERSION" == 3.8.5 ]; then
     echo ":You have $PYTHON_VERSION image ..."
     PYTHON='PY3'
     IMAGING='python3-imaging'
     PYSIX='python3-six'
-elif [ "$PYTHON_VERSION" == 3.10.4 ]; then
+elif [ "$PYTHON_VERSION" == 3.10.4 -o "$PYTHON_VERSION" == 3.10.6 ]; then
     echo ":You have $PYTHON_VERSION image ..."
     PYTHONLAST='PY3'
     IMAGING='python3-imaging'
-    PYSIX='python3-six'    
+    PYSIX='python3-six'
+elif [ "$PYTHON_VERSION" == 3.10.6 ]; then
+    echo ":You have $PYTHON_VERSION image ..."
+    PYTHONLASTV='PY3'
+    IMAGING='python3-imaging'
+    PYSIX='python3-six'        
 else
     echo ":You have $PYTHON_VERSION image ..."
     PYTHON='PY2'
     IMAGING='python-imaging'
     PYSIX='python-six'
 fi
-
-# if python --version 2>&1 | grep -q '^Python 3\.'; then
-#    echo "You have Python3 image"
-#    PYTHON='PY3'
-#    IMAGING='python3-imaging'
-#    PYSIX='python3-six'
-# else
-#    echo "You have Python2 image"
-#    PYTHON='PY2'
-#    IMAGING='python-imaging'
-#    PYSIX='python-six'
-# fi
 
 if grep -q $IMAGING $STATUS; then
     imaging='Installed'
@@ -125,24 +119,28 @@ sleep 1;
 if grep -qs -i 'mips' cat $CHECK ; then
     echo "[ Your device is MIPS ]"
     if [ "$PYTHON" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py3-mipsel.tar.gz -O /tmp/dreamsat$VERSION-py3-mipsel.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py3-mipsel.tar.gz -O /tmp/dreamsat$VERSION-py3-mipsel.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py3-mipsel.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py3-mipsel.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
         chmod 0775 $PLUGIN_PATH/core/*.so
         if [ ! -f '/usr/lib/libpython3.7m.so.1.0' ];then
-            wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/libpython3.7-mipsel.tar.gz -O /tmp/libpython3.7-mipsel.tar.gz
+            wget -q  "--no-check-certificate" $MY_URL/libpython3.7-mipsel.tar.gz -O /tmp/libpython3.7-mipsel.tar.gz
             tar -xzf /tmp/libpython3.7-mipsel.tar.gz -C /
             rm -f /tmp/libpython3.7-mipsel.tar.gz
             chmod 0775 /usr/lib/libpython3.7m.so.1.0
             echo "Send libpython3.7m"
         fi
     elif [ "$PYTHONLAST" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
         tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -C /
         rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+    elif [ "$PYTHONLASTV" = "PY3" ]; then
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -C /
+        rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz    
     else
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py2-mipsel.tar.gz -O /tmp/dreamsat$VERSION-py2-mipsel.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py2-mipsel.tar.gz -O /tmp/dreamsat$VERSION-py2-mipsel.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py2-mipsel.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py2-mipsel.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
@@ -151,24 +149,28 @@ if grep -qs -i 'mips' cat $CHECK ; then
 elif grep -qs -i 'armv7l' cat $CHECK ; then
     echo "[ Your device is armv7l ]"
     if [ "$PYTHON" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py3-arm.tar.gz -O /tmp/dreamsat$VERSION-py3-arm.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py3-arm.tar.gz -O /tmp/dreamsat$VERSION-py3-arm.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py3-arm.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py3-arm.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
         chmod 0775 $PLUGIN_PATH/core/*.so
         if [ ! -f '/usr/lib/libpython3.7m.so.1.0' ];then
-            wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/libpython3.7-arm.tar.gz -O /tmp/libpython3.7-arm.tar.gz
+            wget -q  "--no-check-certificate" $MY_URL/libpython3.7-arm.tar.gz -O /tmp/libpython3.7-arm.tar.gz
             tar -xzf /tmp/libpython3.7-arm.tar.gz -C /
             rm -f /tmp/libpython3.7-arm.tar.gz
             chmod 0775 /usr/lib/libpython3.7m.so.1.0
             echo "Send libpython3.7m"
         fi
     elif [ "$PYTHONLAST" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
         tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -C /
         rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+    elif [ "$PYTHONLASTV" = "PY3" ]; then
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -C /
+        rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz    
     else
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py2-arm.tar.gz -O /tmp/dreamsat$VERSION-py2-arm.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py2-arm.tar.gz -O /tmp/dreamsat$VERSION-py2-arm.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py2-arm.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py2-arm.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
@@ -178,24 +180,28 @@ elif grep -qs -i 'armv7l' cat $CHECK ; then
 elif grep -qs -i 'aarch64' cat $CHECK ; then
     echo "[ Your device is aarch64 ]"
     if [ "$PYTHON" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py3-aarch64.tar.gz -O /tmp/dreamsat$VERSION-py3-aarch64.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py3-aarch64.tar.gz -O /tmp/dreamsat$VERSION-py3-aarch64.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py3-aarch64.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py3-aarch64.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
         chmod 0775 $PLUGIN_PATH/core/*.so
         if [ ! -f '/usr/lib/libpython3.7m.so.1.0' ];then
-            wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/libpython3.7-aarch64.tar.gz -O /tmp/libpython3.7-aarch64.tar.gz
+            wget -q  "--no-check-certificate" $MY_URL/libpython3.7-aarch64.tar.gz -O /tmp/libpython3.7-aarch64.tar.gz
             tar -xzf /tmp/libpython3.7-aarch64.tar.gz -C /
             rm -f /tmp/libpython3.7-aarch64.tar.gz
             chmod 0775 /usr/lib/libpython3.7m.so.1.0
             echo "Send libpython3.7m"
         fi
     elif [ "$PYTHONLAST" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
         tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -C /
         rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+    elif [ "$PYTHONLASTV" = "PY3" ]; then
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -C /
+        rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz    
     else
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py2-aarch64.tar.gz -O /tmp/dreamsat$VERSION-py2-aarch64.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py2-aarch64.tar.gz -O /tmp/dreamsat$VERSION-py2-aarch64.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py2-aarch64.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py2-aarch64.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
@@ -205,24 +211,28 @@ elif grep -qs -i 'aarch64' cat $CHECK ; then
 elif grep -qs -i 'sh4' cat $CHECK ; then
     echo "[ Your device is sh4 ]"
     if [ "$PYTHON" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py3-sh4.tar.gz -O /tmp/dreamsat$VERSION-py3-sh4.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py3-sh4.tar.gz -O /tmp/dreamsat$VERSION-py3-sh4.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py3-sh4.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py3-sh4.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
         chmod 0775 $PLUGIN_PATH/core/*.so
         if [ ! -f '/usr/lib/libpython3.7m.so.1.0' ];then
-            wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/libpython3.7-sh4.tar.gz -O /tmp/libpython3.7-sh4.tar.gz
+            wget -q  "--no-check-certificate" $MY_URL/libpython3.7-sh4.tar.gz -O /tmp/libpython3.7-sh4.tar.gz
             tar -xzf /tmp/libpython3.7-sh4.tar.gz -C /
             rm -f /tmp/libpython3.7-sh4.tar.gz
             chmod 0775 /usr/lib/libpython3.7m.so.1.0
             echo "Send libpython3.7m"
         fi
     elif [ "$PYTHONLAST" = "PY3" ]; then
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
         tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz -C /
         rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+    elif [ "$PYTHONLASTV" = "PY3" ]; then
+        wget -q  "--no-check-certificate" $MY_URL/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -O /tmp/DreamSat-Panel_$VERSIONS-py-3.10.tar.gz
+        tar -xzf /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz -C /
+        rm -f /tmp/DreamSat-Panel_$VERSIONS-py-3.10.6.tar.gz    
     else
-        wget -q  "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/dreamsat$VERSION-py2-sh4.tar.gz -O /tmp/dreamsat$VERSION-py2-sh4.tar.gz
+        wget -q  "--no-check-certificate" $MY_URL/dreamsat$VERSION-py2-sh4.tar.gz -O /tmp/dreamsat$VERSION-py2-sh4.tar.gz
         tar -xzf /tmp/dreamsat$VERSION-py2-sh4.tar.gz -C /
         rm -f /tmp/dreamsat$VERSION-py2-sh4.tar.gz
         chmod 0775 $PLUGIN_PATH/ui/*.so
@@ -241,23 +251,14 @@ if [ $OS = 'DreamOS' ]; then
     fi
 fi
 ##
-if [ "$VERSION" = "1.3" ]; then
-    echo ""
-    echo "#########################################################"
-    echo "#     DreamSatPanel $VERSION INSTALLED SUCCESSFULLY          #"
-    echo "#                    BY Linuxsat                        #"
-    echo "#########################################################"
-    echo "#                Restart Enigma2 GUI                    #"
-    echo "#########################################################"
-else
-    echo ""
-    echo "#########################################################"
-    echo "#     DreamSatPanel $VERSIONS INSTALLED SUCCESSFULLY         #"
-    echo "#                    BY Linuxsat                        #"
-    echo "#########################################################"
-    echo "#                Restart Enigma2 GUI                    #"
-    echo "#########################################################"
-fi        
+
+echo ""
+echo "#########################################################"
+echo "#     DreamSatPanel $VERSION INSTALLED SUCCESSFULLY          #"
+echo "#                    BY Linuxsat                        #"
+echo "#########################################################"
+echo "#                Restart Enigma2 GUI                    #"
+echo "#########################################################"
 sleep 2
 if [ $OS = 'DreamOS' ]; then
     systemctl restart enigma2
