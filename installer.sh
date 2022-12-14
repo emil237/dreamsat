@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#commcommand: wget -q "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/installer.sh  -O - | /bin/sh
+#command: wget -q "--no-check-certificate" https://raw.githubusercontent.com/emil237/dreamsat/main/installer.sh  -O - | /bin/sh
 VERSION=1.5
 PLUGIN_PATH='/usr/lib/enigma2/python/Plugins/Extensions/DreamSat'
 PYTHON_VERSION=$(python -c"import platform; print(platform.python_version())")
